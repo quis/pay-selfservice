@@ -1,5 +1,7 @@
-let path = require('path')
-let nock = require('nock')
+'use strict'
+
+const path = require('path')
+const nock = require('nock')
 const userFixtures = require(path.join(__dirname, '/../fixtures/user_fixtures'))
 
 let adminusersMock = nock(process.env.ADMINUSERS_URL)

@@ -1,4 +1,6 @@
-var _ = require('lodash')
+// 'use strict'
+
+const _ = require('lodash')
 const SMALL_PAGE_SIZE = 100
 const LARGE_PAGE_SIZE = 500
 
@@ -50,7 +52,7 @@ Paginator.prototype = {
    * @return {number}
    */
   getNext: function () {
-    var next = this.getPageByOffset(1)
+    let next = this.getPageByOffset(1)
     return next !== this.page ? next : null
   },
 
@@ -59,7 +61,7 @@ Paginator.prototype = {
    * @return {number}
    */
   getPrevious: function () {
-    var previous = this.getPageByOffset(-1)
+    let previous = this.getPageByOffset(-1)
     return previous !== this.page ? previous : null
   },
 
@@ -89,7 +91,7 @@ Paginator.prototype = {
    */
   getPageByOffset: function (offset, referencePageNumber) {
     referencePageNumber = referencePageNumber || this.page
-    var pageNumber = referencePageNumber + offset
+    let pageNumber = referencePageNumber + offset
 
     pageNumber = Math.max(pageNumber, this.getFirst())
     pageNumber = Math.min(pageNumber, this.getLast())
@@ -103,8 +105,8 @@ Paginator.prototype = {
    * @return {Array. <number>}
    */
   getCentredRange: function (spread, centre) {
-    var start = this.getPageByOffset(-spread, centre)
-    var end = this.getPageByOffset(spread, centre)
+    let start = this.getPageByOffset(-spread, centre)
+    let end = this.getPageByOffset(spread, centre)
 
     return _.range(start, end + 1)
   },
@@ -114,9 +116,9 @@ Paginator.prototype = {
    * @return {Array. <object>}
    */
   getNamedPagesInRange: function (range) {
-    var namedPages = []
+    let namedPages = []
 
-    for (var ctr = 0; ctr < range.length; ctr++) {
+    for (let ctr = 0; ctr < range.length; ctr++) {
       namedPages.push(createPageObject.call(this, range[ctr]))
     }
 
@@ -142,12 +144,12 @@ Paginator.prototype = {
    */
   getNamedCentredRange: function (spread, includeExtremities, includeAdjacent, centre) {
     centre = centre || this.page
-    var pageRange = this.getCentredRange(spread, centre)
-    var namedRange = this.getNamedPagesInRange(pageRange)
-    var first
-    var last
-    var previous
-    var next
+    let pageRange = this.getCentredRange(spread, centre)
+    let namedRange = this.getNamedPagesInRange(pageRange)
+    let first
+    let last
+    let previous
+    let next
 
     // If adjacents are required and exist add them
     if (includeAdjacent) {

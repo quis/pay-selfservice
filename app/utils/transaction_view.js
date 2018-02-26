@@ -31,7 +31,7 @@ module.exports = {
 
     connectorData.cardBrands = lodash.uniqBy(allCards.card_types, 'brand')
       .map((card) => {
-        var value = {}
+        let value = {}
         value.text = card.label
         if (card.brand === filters.brand) {
           value.selected = true
@@ -40,7 +40,8 @@ module.exports = {
       })
 
     connectorData.results.forEach(element => {
-      element.state_friendly = states.getDisplayName(element.transaction_type, element.state.status)
+      // element.state_friendly = states.getDisplayName(element.transaction_type, element.state.status)
+      element.state_friendly = states.getDisplayNameWithErrorMapping(element.state, element.transaction_type, true)
       element.amount = asGBP(element.amount)
       element.email = (element.email && element.email.length > 20) ? element.email.substring(0, 20) + '...' : element.email
       element.updated = dates.utcToDisplay(element.updated)
@@ -60,7 +61,6 @@ module.exports = {
       router.paths.transactions.download, {
         reference: filters.reference,
         email: filters.email,
-        state: filters.state,
         payment_states: filters.payment_states,
         refund_states: filters.refund_states,
         brand: filters.brand,
@@ -74,7 +74,8 @@ module.exports = {
   },
 
   buildPaymentView: function (chargeData, eventsData, users = []) {
-    chargeData.state_friendly = changeCase.upperCaseFirst(chargeData.state.status.toLowerCase())
+    // chargeData.state_friendly = changeCase.upperCaseFirst(chargeData.state.status.toLowerCase())
+    chargeData.state_friendly = states.getDisplayNameWithErrorMapping(chargeData.state, 'payment', true)
 
     chargeData.amount = asGBP(chargeData.amount)
 
@@ -118,14 +119,14 @@ function asGBP (amountInPence) {
 
 function getPaginationLinks (connectorData) {
   if (connectorData.total) {
-    var paginator = new Paginator(connectorData.total, getCurrentPageSize(connectorData), getCurrentPageNumber(connectorData))
+    let paginator = new Paginator(connectorData.total, getCurrentPageSize(connectorData), getCurrentPageNumber(connectorData))
     return paginator.getLast() > 1 ? paginator.getNamedCentredRange(PAGINATION_SPREAD, true, true) : null
   }
 }
 
 function getPageSizeLinks (connectorData) {
   if (getCurrentPageSize(connectorData)) {
-    var paginator = new Paginator(connectorData.total, getCurrentPageSize(connectorData), getCurrentPageNumber(connectorData))
+    let paginator = new Paginator(connectorData.total, getCurrentPageSize(connectorData), getCurrentPageNumber(connectorData))
     return paginator.getDisplaySizeOptions()
   }
 }
@@ -135,9 +136,9 @@ function getCurrentPageNumber (connectorData) {
 }
 
 function getCurrentPageSize (connectorData) {
-  var selfLink = connectorData._links && connectorData._links.self
-  var queryString
-  var limit
+  let selfLink = connectorData._links && connectorData._links.self
+  let queryString
+  let limit
 
   if (selfLink) {
     queryString = url.parse(selfLink.href).query
@@ -149,6 +150,6 @@ function getCurrentPageSize (connectorData) {
 }
 
 function hasPageSizeLinks (connectorData) {
-  var paginator = new Paginator(connectorData.total, getCurrentPageSize(connectorData), getCurrentPageNumber(connectorData))
+  let paginator = new Paginator(connectorData.total, getCurrentPageSize(connectorData), getCurrentPageNumber(connectorData))
   return paginator.showDisplaySizeLinks()
 }
